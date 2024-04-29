@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reqres api fetch</title>
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.fetch {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.fetch:hover {
+    background-color: #45a049;
+}
+
+.main {
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: center;
+}
+
+div {
+    background-color: #f2f2f2;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+
+h4, p {
+    margin: 5px 0;
+}
+
+</style>
+<body>
+    
+
+<button class="fetch">Fetch Users</button>
+
+<div class="main"></div>
+
+</body>
+<!-- <script src="index.js"></script> -->
+<script>
+    let btn = document.querySelector(".fetch");
+    let div = document.querySelector(".main");
+
+    btn.addEventListener('click', myApi);
+
+    async function fetching() {
+        try {
+            let url = await fetch('https://reqres.in/api/users?page=2');
+
+            let finalUrl = await url.json();
+
+            return finalUrl.data;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    function myApi() {
+        div.innerHTML = "";
+
+        fetching().then(data => {
+            data.forEach(element => {
+                let divi = document.createElement("div");
+
+                
+                let name = document.createElement("h4");
+                let email = document.createElement("p");
+                let img = document.createElement("img");
+            
+                name.innerText = `${element.first_name} ${element.last_name}`;
+                email.innerText = `${element.email}`;
+                img.src = element.avatar;
+            
+                divi.appendChild(name);
+                divi.appendChild(email);
+                divi.appendChild(img);
+                div.appendChild(divi);
+            });
+        });
+    }
+</script>
+
+</html>

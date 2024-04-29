@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country assignment</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+</head>
+
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: repeat(6,1fr);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .country {
+        background-color: #f0f0f0;
+        border: 1px solid #b21c1c;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 10px;
+        width: 300px;
+    }
+
+    .fetch {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .fetch:hover {
+        background-color: #45a049;
+    }
+    .card{
+        border: 1px solid rgb(159, 157, 157);
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .details{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        padding:5px;
+        background-color: #29ba30;
+    }
+
+</style>
+
+<body>
+
+    <h2 style="text-align: center;">Countries Data</h2>
+
+    
+
+    <div class="container">
+
+
+    </div>
+
+    <button class="fetch">Fetch Country Data</button>
+    <button
+    style="border: none;width: 120px;height: 30px;background-color: rgb(180, 149, 248);border-radius: 6px;cursor: pointer; "
+    class="high">high to low</button>
+
+<button
+    style="border: none;width: 120px;height: 30px;background-color: rgb(180, 149, 248);border-radius: 6px;cursor: pointer;"
+    class="low">low to high</button>
+</body>
+<!-- <script src="index.js"></script> -->
+<script>
+    let container = document.querySelector(".container");
+let fetchBtn = document.querySelector(".fetch")
+let high = document.querySelector(".high")
+let low = document.querySelector(".low")
+
+let arr = []
+async function fetchApi() {
+    try {
+        let api = await fetch('https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-countries');
+
+        let finalApi = await api.json()
+
+        // console.log(finalApi)
+
+        arr=finalApi.data
+        displayData(finalApi.data);
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+fetchBtn.addEventListener('click', () => {
+    fetchApi()
+})
+
+function displayData(data) {
+    container.innerHtml = "";
+
+    data.forEach(element => {
+        let countryElement = document.createElement("div");
+        countryElement.className="card"
+
+
+        let countryName = document.createElement("h2");
+        let countryDetails = document.createElement("p");
+
+        countryName.textContent = element.country;
+        countryDetails.textContent = `ID: ${element.id}, Rank: ${element.Rank}, Population: ${element.population}`;
+        countryDetails.className="details"
+
+        countryElement.appendChild(countryName);
+        countryElement.appendChild(countryDetails);
+
+        container.appendChild(countryElement);
+    });
+}
+
+
+
+high.addEventListener('click', () => {
+
+    arr.sort((a, b) => b.population - a.population)
+    displayData(arr)
+})
+
+low.addEventListener('click', () => {
+
+    arr.sort((a, b) => a.population - b.population)
+    displayData(arr)
+})
+</script>
+
+</html>
